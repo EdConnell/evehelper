@@ -1,12 +1,13 @@
 source 'https://rubygems.org'
 
 ruby '1.9.3'
-gem 'rails', '3.2.13'
+gem 'rails', '3.2.12'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
 group :development do
+  gem 'debugger'
   gem 'better_errors'
   gem 'binding_of_caller'
   gem 'sqlite3'
@@ -21,3 +22,4 @@ group :assets do
 end
 
 gem 'jquery-rails'
+gem 'nokogiri'
