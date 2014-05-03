@@ -1,0 +1,5 @@
+<ul>
+  <% region_names.each do |region_name| %>
+    <li><%= link_to region_name, region_show_path(region_name) %></li>
+  <% end %>
+</ul>

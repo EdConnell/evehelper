@@ -1,0 +1,22 @@
+<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<h3><%= @region.name %></h3>
+<div id="map">
+    <table>
+  <% @region.solar_systems.each do |system| %>
+      <!-- Each system gets a row in the table to display what will be the most recent data in a neat fashion  -->
+        <tr>
+          <td><span class="name"><%= system.name %>&nbsp;&nbsp;</span></td>
+          <td><span class="jumps">Jumps:&nbsp;&nbsp;<%= system.jumps %>&nbsp;&nbsp;</span></td>
+          <td><span class="npc-kills">NPCs Killed:&nbsp;&nbsp;<%= system.npc_kills %></span></td>
+          <td><span class="ship-kills">Ships Killed:&nbsp;&nbsp;<%= system.ship_kills %></span></td>
+          <td><span class="pod-kills">Pods Killed:&nbsp;&nbsp;<%= system.pod_kills %></span></td>
+        </tr>
+  <% end %>
+  </table>
+</div>
+<script>
+  // below is the solar system data in JSON format for use with the D3 library for display.
+  var data = <%= @data.to_s.html_safe %>;
+  $(document).ready(function() {
+  })
+</script>
