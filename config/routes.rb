@@ -1,4 +1,11 @@
 Evehelper::Application.routes.draw do
+  root to: 'welcome#landing'
+
+  resources :regions, only: :index
+
+  match '/region/:region_name', to: 'regions#show', as: :region_show, via: 'get'
+
+  #Left the default routes help for creamnwheat whom is unfamiliar with rails
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
