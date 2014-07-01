@@ -1,0 +1,121 @@
+  <svg id="map" width="1200" height="800"></svg>
+  <div id="systems">
+    <form name="system-data" action="<%= region_update_path(@region.name) %>" method="post">
+      <table>
+      </table>
+      <input type="submit" id="submit" value="Post X/Y Values">
+    </form>
+  </div>
+  <div id="results">
+  </div>
+<script src="/tipsy.js"></script>
+<script>
+var dataset = <%= @data.to_s.html_safe %>;
+var gatheredData = {}
+
+
+var height = 800
+var width = 1200
+var radius = 10
+
+var drag = d3.behavior.drag()
+    .on("drag", dragMove)
+
+function dragMove(d) {
+  // console.log("System: " + d.name +" X:" + d3.event.x + " Y: " + d3.event.y)
+  var newX = d3.mouse(this)[0]
+  var newY = Math.round(d3.mouse(this)[1])
+  updateForm(d.name, newX, newY)
+  d3.select(this)
+    .attr("cx", d.x = Math.max(radius, Math.min(width - radius, newX)))
+    .attr("cy", d.y = Math.max(radius, Math.min(height - radius, newY)));
+}
+
+function systemForm() {
+  for(ind in dataset) {
+    var systemName = dataset[ind].name
+    var systemFormHTML = "<tr><td><span>"+ systemName +":</span></td><td><input type=\"text\" name="+ systemName +" id="+ systemName +"></td></tr>"
+    $('table').append(systemFormHTML)
+  }
+}
+
+function updateForm(selector, x, y) {
+  $("input#" + selector).attr("value", x + "," + y)
+}
+
+function compileAndPostResults() {
+  resetData();
+  $("input[type=text]").each(function() {
+    var solarSystemName = $(this).attr("id")
+    var x = $(this).attr("value").split(',')[0]
+    var y = $(this).attr("value").split(',')[1]
+    gatheredData[solarSystemName] = {}
+    gatheredData[solarSystemName].x = x
+    gatheredData[solarSystemName].y = y
+  })
+  postData();
+}
+
+function postData() {
+  var url = $("form").attr('action')
+  $.ajax({
+    url: url,
+    type: 'post',
+    dataType: 'JSON',
+    contentType: 'application/json',
+    processData: false,
+    data: JSON.stringify({solarSystemData: gatheredData}),
+    complete: function(response) {
+      window.location = response.responseText
+    }
+  })
+}
+
+function resetData() {
+  gatheredData = {}
+}
+
+$(document).ready(function() {
+  systemForm()
+
+  var map = d3.select("#map")
+              .append("svg")
+              .attr("height", height)
+              .attr("width", width)
+
+  var systems = map.selectAll("circle")
+                   .data(dataset)
+                   .enter()
+                   .append("circle")
+
+  systems.attr("cx", function(data, index) {
+            return (index * 10) + 5;
+          })
+         .attr("cy", function(data, index) {
+            return (index * 10) + 5;
+          })
+         .attr("r", radius)
+         .attr('fill', 'orange')
+         .attr('stroke', 'yellow')
+         .attr('stroke-width', '2px')
+         .attr('class', 'solar-system')
+         .call(drag)
+
+  $('.solar-system').tipsy({
+        gravity: 'sw',
+        html: true,
+        // trigger: 'manual',
+        title: function() {
+          var d = this.__data__;
+          return 'System: ' + d.name;
+        }
+      });
+
+
+  $("#submit").on("click", function(event) {
+    event.preventDefault();
+    compileAndPostResults();
+  })
+})
+
+</script>
