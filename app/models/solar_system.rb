@@ -27,4 +27,10 @@ class SolarSystem < ActiveRecord::Base
   def jumps
     most_recent.jumps
   end
+
+  def set_x_and_y(coordinate_values)
+    self.x = coordinate_values[:x]
+    self.y = coordinate_values[:y]
+    self.save
+  end
 end

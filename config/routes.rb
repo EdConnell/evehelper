@@ -1,9 +1,11 @@
 Evehelper::Application.routes.draw do
-  root to: 'welcome#landing'
+  root to: 'regions#index'
 
   resources :regions, only: :index
 
   match '/region/:region_name', to: 'regions#show', as: :region_show, via: 'get'
+  match '/region/:region_name/edit', to: 'regions#edit', as: :region_edit, via: 'get'
+  match '/region/:region_name/update', to: 'regions#update', as: :region_update, via: 'post'
 
   #Left the default routes help for creamnwheat whom is unfamiliar with rails
   # The priority is based upon order of creation:
